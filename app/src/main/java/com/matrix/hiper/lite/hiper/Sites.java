@@ -93,6 +93,7 @@ public class Sites {
         private final String id;
         private HashMap<String, StaticHosts> point;
         private final ArrayList<UnsafeRoute> unsafeRoutes;
+        private final ArrayList<String> dnsResolvers;
         private final String cert;
         private final String ca;
         private final int lhDuration;
@@ -105,14 +106,15 @@ public class Sites {
         private String key;
 
         public IncomingSite() {
-            this("", "", new HashMap<>(), new ArrayList<>(), "", "", 0, 0, 0, "", 0, "", "");
+            this("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "", "", 0, 0, 0, "", 0, "", "");
         }
 
-        public IncomingSite(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, String cert, String ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, String key) {
+        public IncomingSite(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, ArrayList<String> dnsResolvers, String cert, String ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, String key) {
             this.name = name;
             this.id = id;
             this.point = point;
             this.unsafeRoutes = unsafeRoutes;
+            this.dnsResolvers = dnsResolvers;
             this.cert = cert;
             this.ca = ca;
             this.lhDuration = lhDuration;
@@ -138,6 +140,10 @@ public class Sites {
 
         public ArrayList<UnsafeRoute> getUnsafeRoutes() {
             return unsafeRoutes;
+        }
+
+        public ArrayList<String> getDnsResolvers() {
+            return dnsResolvers;
         }
 
         public String getCert() {
@@ -216,6 +222,7 @@ public class Sites {
                     id,
                     point,
                     new ArrayList<>(),
+                    new ArrayList<>(),
                     cert,
                     ca,
                     0,
@@ -236,6 +243,7 @@ public class Sites {
         private final String id;
         private final HashMap<String, StaticHosts> point;
         private final ArrayList<UnsafeRoute> unsafeRoutes;
+        private final ArrayList<String> dnsResolvers;
         private final CertificateInfo cert;
         private final ArrayList<CertificateInfo> ca;
         private final int lhDuration;
@@ -254,14 +262,15 @@ public class Sites {
         private final String config;
 
         public Site() {
-            this("", "", new HashMap<>(), new ArrayList<>(), new CertificateInfo(), new ArrayList<>(), 0, 0, 0, "", 0, "", false, "", "", new ArrayList<>(), "");
+            this("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new CertificateInfo(), new ArrayList<>(), 0, 0, 0, "", 0, "", false, "", "", new ArrayList<>(), "");
         }
 
-        public Site(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, CertificateInfo cert, ArrayList<CertificateInfo> ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, boolean connected, String status, String logFile, ArrayList<String> errors, String config) {
+        public Site(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, ArrayList<String> dnsResolvers, CertificateInfo cert, ArrayList<CertificateInfo> ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, boolean connected, String status, String logFile, ArrayList<String> errors, String config) {
             this.name = name;
             this.id = id;
             this.point = point;
             this.unsafeRoutes = unsafeRoutes;
+            this.dnsResolvers = dnsResolvers;
             this.cert = cert;
             this.ca = ca;
             this.lhDuration = lhDuration;
@@ -291,6 +300,10 @@ public class Sites {
 
         public ArrayList<UnsafeRoute> getUnsafeRoutes() {
             return unsafeRoutes;
+        }
+
+        public ArrayList<String> getDnsResolvers() {
+            return dnsResolvers;
         }
 
         public CertificateInfo getCert() {
@@ -394,6 +407,7 @@ public class Sites {
                     incomingSite.getId(),
                     incomingSite.getPoint(),
                     incomingSite.getUnsafeRoutes(),
+                    incomingSite.getDnsResolvers(),
                     cert,
                     ca,
                     incomingSite.getLhDuration(),

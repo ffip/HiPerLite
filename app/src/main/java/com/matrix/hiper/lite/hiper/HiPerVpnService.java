@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat;
 import com.matrix.hiper.lite.R;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Objects;
 
 import mobileHiPer.CIDR;
@@ -71,8 +72,6 @@ public class HiPerVpnService extends VpnService {
         //TODO: if we fail to start, android will attempt a restart lacking all the intent data we need.
         // Link active site config in Main to avoid this
         site = Sites.Site.fromFile(getApplicationContext(), intent.getExtras().getString("name"));
-
-
 
         if (site.getCert() == null) {
             announceExit("Site is missing a certificate");
@@ -139,6 +138,18 @@ public class HiPerVpnService extends VpnService {
             } catch (Exception e) {
                 announceExit(e.toString());
                 e.printStackTrace();
+            }
+        }
+
+        // Add our dns resolvers
+        for (String dnsResolver : site.getDnsResolvers()) {
+            builder.addDnsServer(dnsResolver);
+        }
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        for (Network network : connectivityManager.getAllNetworks()) {
+            for (InetAddress addresses : connectivityManager.getLinkProperties(network).getDnsServers()) {
+                builder.addDnsServer(addresses);
             }
         }
 
