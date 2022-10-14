@@ -1,0 +1,42 @@
+name: Android CI
+
+on:
+  pull_request:
+    branches-ignore:
+      - ''
+  push:
+    branches-ignore:
+      - ''
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: Build Release Apk
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleRelease
+        
+    - name: Build Signed Release APK
+      uses: victorbnl/build-signed-apk@main
+      with:
+        keystore_file: key-store.jks
+        keystore_password: 666666
+        key_alias: hiper-key
+        key_password: 666666
+        
+    - name : upload apk
+      uses: actions/upload-artifact@v3
+      with:
+        name: HiPer
+        path: app/build/outputs/apk/release/*
