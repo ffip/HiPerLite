@@ -30,7 +30,7 @@ jobs:
     - name: Build Signed Release APK
       uses: victorbnl/build-signed-apk@main
       with:
-        keystore_file: ket-store.jks
+        keystore_file: key-store.jks
         keystore_password: 666666
         key_alias: hiper-key
         key_password: 666666
