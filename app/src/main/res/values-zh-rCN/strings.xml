@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HiPer</string>
+
+    <string name="time_pattern">yyyy 年 MM 月 dd 日 HH:mm:ss</string>
+
+    <string name="item_delete_fail">删除配置失败</string>
+
+    <string name="dialog_delete_title">警告</string>
+    <string name="dialog_delete_msg">你确定要删除该配置吗？</string>
+    <string name="dialog_delete_positive">删除</string>
+    <string name="dialog_delete_negative">取消</string>
+
+    <string name="dialog_add_new_instance_title">添加新配置</string>
+    <string name="dialog_add_new_instance_name">名称（必填）</string>
+    <string name="dialog_add_new_instance_token">索引或链接（必填）</string>
+    <string name="dialog_add_new_instance_positive">确定</string>
+    <string name="dialog_add_new_instance_negative">取消</string>
+    <string name="dialog_add_new_instance_warn">该配置已存在！</string>
+    <string name="dialog_add_new_instance_error_invalid">无效的凭证！</string>
+    <string name="dialog_add_new_instance_error_network">无法获取配置，请检查网络和凭证！</string>
+
+    <string name="auto_update_point">自动同步配置</string>
+    <string name="log">Hiper 日志</string>
+    <string name="copy_success">复制成功！</string>
+</resources>

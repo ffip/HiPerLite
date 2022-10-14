@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">HiPer</string>
+
+    <string name="time_pattern">EEE, MMM d, yyyy HH:mm:ss</string>
+
+    <string name="item_delete_fail">Failed to delete the instance</string>
+
+    <string name="dialog_delete_title">Warning</string>
+    <string name="dialog_delete_msg">Are you sure to delete this instance?</string>
+    <string name="dialog_delete_positive">Delete</string>
+    <string name="dialog_delete_negative">Cancel</string>
+
+    <string name="dialog_add_new_instance_title">Add New HiPer Instance</string>
+    <string name="dialog_add_new_instance_name">Name (Required)</string>
+    <string name="dialog_add_new_instance_token">Token (Required)</string>
+    <string name="dialog_add_new_instance_positive">OK</string>
+    <string name="dialog_add_new_instance_negative">Cancel</string>
+    <string name="dialog_add_new_instance_warn">The instance already exist!</string>
+    <string name="dialog_add_new_instance_error_invalid">Invalid token!</string>
+    <string name="dialog_add_new_instance_error_network">Failed to get configuration, please check your network and token!</string>
+
+    <string name="auto_update_point">Auto Update Configuration</string>
+    <string name="log">Hiper Log</string>
+    <string name="copy_success">Successfully copied!</string>
+</resources>
