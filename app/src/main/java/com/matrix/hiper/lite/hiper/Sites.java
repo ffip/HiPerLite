@@ -70,6 +70,11 @@ public class Sites {
      *     - "x.x.x.x"
      *     - "x.x.x.x"
      *
+     * dns:
+     *     - "6.6.6.6"
+     *     - "6.7.8.9"
+     *     - "7.7.7.7"
+     *
      * relay:
      *   relays:
      *     - "x.x.x.x"
@@ -93,7 +98,7 @@ public class Sites {
         private final String id;
         private HashMap<String, StaticHosts> point;
         private final ArrayList<UnsafeRoute> unsafeRoutes;
-        private final ArrayList<String> dnsResolvers;
+        private ArrayList<String> dnsResolvers;
         private final String cert;
         private final String ca;
         private final int lhDuration;
@@ -192,6 +197,7 @@ public class Sites {
             HashMap<String, ArrayList<String>> rawPoint = (HashMap<String, ArrayList<String>>) object.get("point");
             HashMap<String, ArrayList<String>> tower = (HashMap<String, ArrayList<String>>) object.get("tower");
             ArrayList<String> hosts = tower.get("hosts");
+            ArrayList<String> dns = (ArrayList<String>) object.get("dns");
             HashMap<String, StaticHosts> point = new HashMap<>();
             for (String pointKey : rawPoint.keySet()) {
                 boolean isTower = hosts.contains(pointKey);
@@ -199,6 +205,7 @@ public class Sites {
                 point.put(pointKey, staticHosts);
             }
             this.point = point;
+            this.dnsResolvers = dns;
         }
 
         public static IncomingSite parse(String name, String id, String conf) {
@@ -211,6 +218,7 @@ public class Sites {
             HashMap<String, ArrayList<String>> rawPoint = (HashMap<String, ArrayList<String>>) object.get("point");
             HashMap<String, ArrayList<String>> tower = (HashMap<String, ArrayList<String>>) object.get("tower");
             ArrayList<String> hosts = tower.get("hosts");
+            ArrayList<String> dns = (ArrayList<String>) object.get("dns");
             HashMap<String, StaticHosts> point = new HashMap<>();
             for (String pointKey : rawPoint.keySet()) {
                 boolean isTower = hosts.contains(pointKey);
@@ -222,7 +230,7 @@ public class Sites {
                     id,
                     point,
                     new ArrayList<>(),
-                    new ArrayList<>(),
+                    dns,
                     cert,
                     ca,
                     0,
