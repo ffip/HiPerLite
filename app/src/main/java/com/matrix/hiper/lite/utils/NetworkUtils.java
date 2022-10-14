@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public final class NetworkUtils {
 
@@ -92,8 +93,11 @@ public final class NetworkUtils {
 
                 HttpURLConnection redirected = (HttpURLConnection) new URL(conn.getURL(), encodeLocation(newURL))
                         .openConnection();
-                properties
-                        .forEach((key, value) -> value.forEach(element -> redirected.addRequestProperty(key, element)));
+                for (String key : properties.keySet()) {
+                    for (String element : Objects.requireNonNull(properties.get(key))) {
+                        redirected.addRequestProperty(key, element);
+                    }
+                }
                 redirected.setRequestMethod(method);
                 conn = redirected;
                 ++redirect;
