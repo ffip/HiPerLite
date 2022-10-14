@@ -30,6 +30,5 @@ jobs:
     - name : upload apk
       uses: actions/upload-artifact@v3
       with:
-        name: app-release
+        name: HiPer
         path: app/build/outputs/apk/release/*
-        retention-days: 1
