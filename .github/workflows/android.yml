@@ -21,11 +21,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-
-    - name: Build Release Apk
-      run: |
-        chmod +x gradlew
-        ./gradlew assembleRelease
         
     - name: Build Signed Release APK
       uses: victorbnl/build-signed-apk@main
@@ -39,4 +34,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: HiPer
-        path: app/build/outputs/apk/release/*
+        path: app/build/outputs/apk/release/app-release.apk
