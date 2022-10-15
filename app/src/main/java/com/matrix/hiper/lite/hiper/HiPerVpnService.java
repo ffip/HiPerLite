@@ -41,6 +41,7 @@ public class HiPerVpnService extends VpnService {
     private NetworkCallback networkCallback = new NetworkCallback();
     private boolean didSleep = false;
     private NotificationManager notificationManager;
+    private boolean isCallbackRegistered = false;
 
     private static HiPerCallback callback;
 
@@ -197,12 +198,16 @@ public class HiPerVpnService extends VpnService {
         NetworkRequest.Builder builder = new NetworkRequest.Builder();
         builder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
 
+        isCallbackRegistered = true;
         connectivityManager.registerNetworkCallback(builder.build(), networkCallback);
     }
 
     private void unregisterNetworkCallback() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        connectivityManager.unregisterNetworkCallback(networkCallback);
+        if (isCallbackRegistered) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+            isCallbackRegistered = false;
+        }
     }
 
     public class NetworkCallback extends ConnectivityManager.NetworkCallback {
