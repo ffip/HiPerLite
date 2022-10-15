@@ -98,6 +98,7 @@ public class Sites {
         private final String id;
         private HashMap<String, StaticHosts> point;
         private final ArrayList<UnsafeRoute> unsafeRoutes;
+        @SerializedName("dns")
         private ArrayList<String> dnsResolvers;
         private final String cert;
         private final String ca;
@@ -251,6 +252,7 @@ public class Sites {
         private final String id;
         private final HashMap<String, StaticHosts> point;
         private final ArrayList<UnsafeRoute> unsafeRoutes;
+        @SerializedName("dns")
         private final ArrayList<String> dnsResolvers;
         private final CertificateInfo cert;
         private final ArrayList<CertificateInfo> ca;

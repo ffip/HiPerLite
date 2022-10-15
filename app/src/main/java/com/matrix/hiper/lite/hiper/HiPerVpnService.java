@@ -1,13 +1,11 @@
 package com.matrix.hiper.lite.hiper;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -20,9 +18,6 @@ import android.system.OsConstants;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-
-import com.matrix.hiper.lite.R;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -82,24 +77,6 @@ public class HiPerVpnService extends VpnService {
 
         startVpn();
 
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "default")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background))
-                .setContentTitle("HiPer (" + site.getCert().getCert().getDetails().getIps().get(0).split("/")[0] + ")")
-                .setContentText("HiPer service is running!")
-                .setFullScreenIntent(null, false)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setAutoCancel(false);
-
-        Notification notification = builder.build();
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        }
-        notificationManager.notify(1, notification);
-
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -119,14 +96,14 @@ public class HiPerVpnService extends VpnService {
             return;
         }
 
-        Builder builder = new Builder()
+        Builder builder;
+        builder = new Builder()
                 .addAddress(ipNet.getIp(), (int) ipNet.getMaskSize())
                 .addRoute(ipNet.getNetwork(), (int) ipNet.getMaskSize())
                 .setMtu(site.getMtu())
                 .setSession(TAG)
                 .allowFamily(OsConstants.AF_INET)
                 .allowFamily(OsConstants.AF_INET6);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             builder.setMetered(false);
         }
@@ -156,6 +133,7 @@ public class HiPerVpnService extends VpnService {
 
         try {
             vpnInterface = builder.establish();
+            System.out.println(site.getConfig());
             hiper = mobileHiPer.MobileHiPer.newHiPer(site.getConfig(), site.getKey(this), site.getLogFile(), vpnInterface.getFd());
         } catch (Exception e) {
             Log.e(TAG, "Got an error " + e);
