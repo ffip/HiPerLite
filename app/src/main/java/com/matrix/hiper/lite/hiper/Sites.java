@@ -100,6 +100,7 @@ public class Sites {
         private final ArrayList<UnsafeRoute> unsafeRoutes;
         @SerializedName("dns")
         private ArrayList<String> dnsResolvers;
+        private Relay relay;
         private final String cert;
         private final String ca;
         private final int lhDuration;
@@ -112,15 +113,16 @@ public class Sites {
         private String key;
 
         public IncomingSite() {
-            this("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>(), "", "", 0, 0, 0, "", 0, "", "");
+            this("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new Relay(), "", "", 0, 0, 0, "", 0, "", "");
         }
 
-        public IncomingSite(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, ArrayList<String> dnsResolvers, String cert, String ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, String key) {
+        public IncomingSite(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, ArrayList<String> dnsResolvers, Relay relay, String cert, String ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, String key) {
             this.name = name;
             this.id = id;
             this.point = point;
             this.unsafeRoutes = unsafeRoutes;
             this.dnsResolvers = dnsResolvers;
+            this.relay = relay;
             this.cert = cert;
             this.ca = ca;
             this.lhDuration = lhDuration;
@@ -129,6 +131,22 @@ public class Sites {
             this.cipher = cipher;
             this.sortKey = sortKey;
             this.logVerbosity = logVerbosity;
+            this.key = key;
+        }
+
+        public void setPoint(HashMap<String, StaticHosts> point) {
+            this.point = point;
+        }
+
+        public void setDnsResolvers(ArrayList<String> dnsResolvers) {
+            this.dnsResolvers = dnsResolvers;
+        }
+
+        public void setRelay(Relay relay) {
+            this.relay = relay;
+        }
+
+        public void setKey(String key) {
             this.key = key;
         }
 
@@ -150,6 +168,10 @@ public class Sites {
 
         public ArrayList<String> getDnsResolvers() {
             return dnsResolvers;
+        }
+
+        public Relay getRelay() {
+            return relay;
         }
 
         public String getCert() {
@@ -199,14 +221,18 @@ public class Sites {
             HashMap<String, ArrayList<String>> tower = (HashMap<String, ArrayList<String>>) object.get("tower");
             ArrayList<String> hosts = tower.get("hosts");
             ArrayList<String> dns = (ArrayList<String>) object.get("dns");
+            HashMap<String, ArrayList<String>> relay = (HashMap<String, ArrayList<String>>) object.get("relay");
+            ArrayList<String> relays = relay.get("relays");
             HashMap<String, StaticHosts> point = new HashMap<>();
             for (String pointKey : rawPoint.keySet()) {
                 boolean isTower = hosts.contains(pointKey);
                 StaticHosts staticHosts = new StaticHosts(isTower, rawPoint.get(pointKey));
                 point.put(pointKey, staticHosts);
             }
+            Relay relayResult = new Relay(relays.size() > 0 ? true : false, relays);
             this.point = point;
             this.dnsResolvers = dns;
+            this.relay = relayResult;
         }
 
         public static IncomingSite parse(String name, String id, String conf) {
@@ -220,18 +246,22 @@ public class Sites {
             HashMap<String, ArrayList<String>> tower = (HashMap<String, ArrayList<String>>) object.get("tower");
             ArrayList<String> hosts = tower.get("hosts");
             ArrayList<String> dns = (ArrayList<String>) object.get("dns");
+            HashMap<String, ArrayList<String>> relay = (HashMap<String, ArrayList<String>>) object.get("relay");
+            ArrayList<String> relays = relay.get("relays");
             HashMap<String, StaticHosts> point = new HashMap<>();
             for (String pointKey : rawPoint.keySet()) {
                 boolean isTower = hosts.contains(pointKey);
                 StaticHosts staticHosts = new StaticHosts(isTower, rawPoint.get(pointKey));
                 point.put(pointKey, staticHosts);
             }
+            Relay relayResult = new Relay(relays.size() > 0 ? true : false, relays);
             return new IncomingSite(
                     name,
                     id,
                     point,
                     new ArrayList<>(),
                     dns,
+                    relayResult,
                     cert,
                     ca,
                     0,
@@ -254,6 +284,7 @@ public class Sites {
         private final ArrayList<UnsafeRoute> unsafeRoutes;
         @SerializedName("dns")
         private final ArrayList<String> dnsResolvers;
+        private final Relay relay;
         private final CertificateInfo cert;
         private final ArrayList<CertificateInfo> ca;
         private final int lhDuration;
@@ -272,15 +303,16 @@ public class Sites {
         private final String config;
 
         public Site() {
-            this("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new CertificateInfo(), new ArrayList<>(), 0, 0, 0, "", 0, "", false, "", "", new ArrayList<>(), "");
+            this("", "", new HashMap<>(), new ArrayList<>(), new ArrayList<>(), new Relay(), new CertificateInfo(), new ArrayList<>(), 0, 0, 0, "", 0, "", false, "", "", new ArrayList<>(), "");
         }
 
-        public Site(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, ArrayList<String> dnsResolvers, CertificateInfo cert, ArrayList<CertificateInfo> ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, boolean connected, String status, String logFile, ArrayList<String> errors, String config) {
+        public Site(String name, String id, HashMap<String, StaticHosts> point, ArrayList<UnsafeRoute> unsafeRoutes, ArrayList<String> dnsResolvers, Relay relay, CertificateInfo cert, ArrayList<CertificateInfo> ca, int lhDuration, int port, int mtu, String cipher, int sortKey, String logVerbosity, boolean connected, String status, String logFile, ArrayList<String> errors, String config) {
             this.name = name;
             this.id = id;
             this.point = point;
             this.unsafeRoutes = unsafeRoutes;
             this.dnsResolvers = dnsResolvers;
+            this.relay = relay;
             this.cert = cert;
             this.ca = ca;
             this.lhDuration = lhDuration;
@@ -314,6 +346,10 @@ public class Sites {
 
         public ArrayList<String> getDnsResolvers() {
             return dnsResolvers;
+        }
+
+        public Relay getRelay() {
+            return relay;
         }
 
         public CertificateInfo getCert() {
@@ -418,6 +454,7 @@ public class Sites {
                     incomingSite.getPoint(),
                     incomingSite.getUnsafeRoutes(),
                     incomingSite.getDnsResolvers(),
+                    incomingSite.getRelay(),
                     cert,
                     ca,
                     incomingSite.getLhDuration(),
@@ -641,6 +678,22 @@ public class Sites {
 
         public int getMtu() {
             return mtu;
+        }
+
+    }
+
+    private static class Relay{
+
+        private final boolean allowRelay;
+        private final ArrayList<String> relays;
+
+        public Relay() {
+            this(false, new ArrayList<>());
+        }
+
+        public Relay(boolean allowRelay, ArrayList<String> relays) {
+            this.allowRelay = allowRelay;
+            this.relays = relays;
         }
 
     }

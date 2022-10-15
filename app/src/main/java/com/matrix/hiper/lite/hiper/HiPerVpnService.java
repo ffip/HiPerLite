@@ -12,6 +12,7 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.net.VpnService;
 import android.os.Build;
+import android.os.Handler;
 import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
 import android.system.OsConstants;
@@ -131,29 +132,34 @@ public class HiPerVpnService extends VpnService {
             }
         }
 
-        try {
-            vpnInterface = builder.establish();
-            System.out.println(site.getConfig());
-            hiper = mobileHiPer.MobileHiPer.newHiPer(site.getConfig(), site.getKey(this), site.getLogFile(), vpnInterface.getFd());
-        } catch (Exception e) {
-            Log.e(TAG, "Got an error " + e);
+        vpnInterface = builder.establish();
+        System.out.println(site.getConfig());
+        Handler handler = new Handler();
+        new Thread(() -> {
             try {
-                vpnInterface.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+                hiper = mobileHiPer.MobileHiPer.newHiPer(site.getConfig(), site.getKey(this), site.getLogFile(), vpnInterface.getFd());
+                handler.post(() -> {
+                    registerNetworkCallback();
+                    //TODO: There is an open discussion around sleep killing tunnels or just changing mobile to tear down stale tunnels
+                    //registerSleep()
+
+                    hiper.start();
+                    running = true;
+                    sendSimple(1);
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Got an error " + e);
+                handler.post(() -> {
+                    try {
+                        vpnInterface.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    announceExit(e.toString());
+                });
+                stopSelf();
             }
-            announceExit(e.toString());
-            stopSelf();
-            return;
-        }
-
-        registerNetworkCallback();
-        //TODO: There is an open discussion around sleep killing tunnels or just changing mobile to tear down stale tunnels
-        //registerSleep()
-
-        hiper.start();
-        running = true;
-        sendSimple(1);
+        }).start();
     }
 
     private void stopVpn() {
