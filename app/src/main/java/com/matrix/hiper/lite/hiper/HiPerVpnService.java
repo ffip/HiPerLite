@@ -121,6 +121,7 @@ public class HiPerVpnService extends VpnService {
         }
 
         // Add our dns resolvers
+        /*
         for (String dnsResolver : site.getDnsResolvers()) {
             builder.addDnsServer(dnsResolver);
         }
@@ -131,6 +132,8 @@ public class HiPerVpnService extends VpnService {
                 builder.addDnsServer(addresses);
             }
         }
+
+         */
 
         vpnInterface = builder.establish();
         System.out.println(site.getConfig());
