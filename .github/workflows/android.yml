@@ -20,7 +20,7 @@ jobs:
         key_password: 666666
         
     - name : upload apk
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4.6.2
       with:
         name: HiPer
         path: app/build/outputs/apk/release/app-release.apk
